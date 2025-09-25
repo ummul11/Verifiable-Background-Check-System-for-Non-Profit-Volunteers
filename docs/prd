@@ -1,0 +1,160 @@
+# PRD: Verifiable Background Check System for Non-Profit Volunteers
+
+## Overview
+The **Verifiable Background Check System for Non-Profit Volunteers** is a blockchain-based solution designed to streamline and secure the background verification process for individuals volunteering at non-profit organizations. It ensures:
+- Transparent, tamper-proof background check records.
+- Volunteer privacy and data minimization through selective disclosure.
+- Trusted verification via authorized evaluators.
+- Easy access for non-profits to confirm volunteer credentials.
+
+Each smart contract is modular, handling a single responsibility, ensuring flexibility and security.
+
+---
+
+## Objectives
+1. Provide a verifiable, immutable record of volunteer background checks.
+2. Allow non-profits to validate volunteer credentials without storing sensitive personal data on-chain.
+3. Empower accredited background check providers to issue verified attestations.
+4. Incentivize compliance and accountability through tokenised reputation.
+5. Enable volunteers to reuse their background check credentials across multiple organizations.
+
+---
+
+## Stakeholders
+- **Volunteers**: Individuals applying to work at non-profits.
+- **Non-Profit Organizations**: Entities requiring verified background information on volunteers.
+- **Accredited Check Providers**: Authorized agencies conducting background checks.
+- **Auditors/Regulators**: Oversight bodies ensuring process compliance.
+- **Community DAO**: Governance mechanism overseeing trusted providers and dispute resolution.
+
+---
+
+## Core Modules (Smart Contracts)
+
+### 1. **VolunteerRegistry Contract**
+**Purpose:**  
+Register volunteers on-chain with minimal metadata (unique ID, hash of personal data, not raw data).
+
+**Data Structures:**  
+- `map volunteers { volunteerId: { hashedIdentity: string, registered: bool, metadata: string } }`
+- `event VolunteerRegistered(volunteerId, hashedIdentity)`
+
+**Justification:**  
+Establishes a tamper-proof identity anchor for volunteers without exposing sensitive data.
+
+---
+
+### 2. **ProviderRegistry Contract**
+**Purpose:**  
+Maintain a whitelist of accredited background check providers authorized to issue verifications.
+
+**Data Structures:**  
+- `map providers { providerId: { name: string, verified: bool, metadata: string } }`
+- `event ProviderApproved(providerId, name)`
+
+**Justification:**  
+Ensures only trusted, verified agencies can issue background check attestations, preventing fraudulent claims.
+
+---
+
+### 3. **BackgroundCheckAttestation Contract**
+**Purpose:**  
+Allow accredited providers to publish cryptographic attestations of completed checks for volunteers.
+
+**Data Structures:**  
+- `map attestations { attestationId: { volunteerId: uint, providerId: uint, checkType: string, status: string, issuedAt: uint, validUntil: uint } }`
+- `event AttestationIssued(attestationId, volunteerId, providerId, checkType, status)`
+
+**Justification:**  
+Provides immutable, time-bound verification records while keeping sensitive details off-chain.
+
+---
+
+### 4. **VerificationAccess Contract**
+**Purpose:**  
+Enable volunteers to grant non-profits access to specific background check attestations.
+
+**Data Structures:**  
+- `map accessGrants { grantId: { volunteerId: uint, orgId: uint, attestationId: uint, expiry: uint, active: bool } }`
+- `event AccessGranted(volunteerId, orgId, attestationId)`
+
+**Justification:**  
+Empowers volunteers to control who can view their records, supporting selective disclosure and privacy.
+
+---
+
+### 5. **GovernanceDAO Contract**
+**Purpose:**  
+Community-led governance over provider accreditation, dispute resolution, and system upgrades.
+
+**Data Structures:**  
+- `map proposals { proposalId: { title: string, description: string, votesFor: uint, votesAgainst: uint, deadline: uint, executed: bool } }`
+- `map votes { proposalId: { voter: principal, choice: bool } }`
+- `event ProposalCreated(proposalId, title)`
+- `event VoteCast(proposalId, voter, choice)`
+
+**Justification:**  
+DAO governance ensures transparent community oversight, reducing reliance on a central authority.
+
+---
+
+### 6. **ReputationNFT Contract**
+**Purpose:**  
+Mint non-transferable NFTs (soulbound tokens) to volunteers representing verified background check completion.
+
+**Data Structures:**  
+- `map reputationNFTs { volunteerId: uint, metadata: string, issuedBy: uint }`
+- `event ReputationNFTIssued(volunteerId, metadata)`
+
+**Justification:**  
+Provides a portable, verifiable credential for volunteers, usable across non-profits without repeated checks.
+
+---
+
+## System Workflow
+
+1. **Volunteer Registration**  
+   Volunteer signs up and is recorded in `VolunteerRegistry`.
+2. **Provider Accreditation**  
+   Verified providers are onboarded via `ProviderRegistry`.
+3. **Background Check Attestation**  
+   Provider issues check records via `BackgroundCheckAttestation`.
+4. **Volunteer Grants Access**  
+   Volunteer shares attestations with non-profits using `VerificationAccess`.
+5. **Non-Profit Validation**  
+   Non-profits verify attestation authenticity on-chain.
+6. **Recognition**  
+   Volunteer receives `ReputationNFT` for completed verification.
+7. **Governance Oversight**  
+   DAO manages disputes and approves/removes providers.
+
+---
+
+## Technical Requirements
+- **Blockchain**: Stacks (Clarity contracts), leveraging Bitcoin finality.
+- **Standards**: SIP-009 for NFTs, SIP-010 for fungible tokens (if DAO incentives are introduced).
+- **Privacy Preserving**: Store only hashes/commitments of volunteer data on-chain.
+- **Wallet Integration**: Hiro Wallet for volunteer/non-profit interaction.
+- **Event Logging**: All actions are logged for transparency.
+
+---
+
+## Justification for Modular Design
+- **VolunteerRegistry** ensures identity anchors without exposing PII.  
+- **ProviderRegistry** enforces trust boundaries.  
+- **BackgroundCheckAttestation** ensures transparency and immutability.  
+- **VerificationAccess** grants selective, time-bound data sharing.  
+- **GovernanceDAO** decentralizes oversight.  
+- **ReputationNFT** provides recognition and reusability of verified checks.  
+
+---
+
+## Success Metrics
+- Number of volunteers registered.
+- Number of accredited providers onboarded.
+- Total attestations issued and verified.
+- Non-profits actively validating records.
+- NFTs issued as credentials.
+- Governance proposals and participation rate.
+
+---
