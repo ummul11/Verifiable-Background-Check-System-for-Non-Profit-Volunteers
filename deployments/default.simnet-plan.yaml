@@ -45,16 +45,19 @@ genesis:
       balance: "100000000000000"
       sbtc-balance: "1000000000"
   contracts:
+    - genesis
+    - lockup
+    - bns
+    - cost-voting
     - costs
     - pox
+    - costs-2
     - pox-2
+    - costs-3
     - pox-3
     - pox-4
-    - lockup
-    - costs-2
-    - costs-3
-    - cost-voting
-    - bns
+    - signers
+    - signers-voting
 plan:
   batches:
     - id: 0
@@ -62,21 +65,26 @@ plan:
         - emulated-contract-publish:
             contract-name: provider-registry
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: "contracts\\provider-registry.clar"
+            path: contracts/provider-registry.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: volunteer-registry
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: "contracts\\volunteer-registry.clar"
+            path: contracts/volunteer-registry.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: background-check-attestation
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: "contracts\\background-check-attestation.clar"
+            path: contracts/background-check-attestation.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: expiry-management
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/expiry-management.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: verification-access
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: "contracts\\verification-access.clar"
+            path: contracts/verification-access.clar
             clarity-version: 3
       epoch: "3.2"
